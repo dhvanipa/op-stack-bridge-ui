@@ -1,0 +1,12 @@
+// L2 predeploy addresses (fixed for all OP Stack chains)
+export const L2_STANDARD_BRIDGE =
+  "0x4200000000000000000000000000000000000010" as const;
+export const L2_CROSS_DOMAIN_MESSENGER =
+  "0x4200000000000000000000000000000000000007" as const;
+export const L2_TO_L1_MESSAGE_PASSER =
+  "0x4200000000000000000000000000000000000016" as const;
+
+// Time constants
+export const DEPOSIT_CONFIRMATION_MINUTES = 3;
+export const PROVE_WAIT_HOURS = 1;
+export const FINALIZE_WAIT_DAYS = 7;

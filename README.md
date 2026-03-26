@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OP Bridge UI
 
-## Getting Started
+An open-source, self-hostable bridge UI for OP Stack rollups. Supports deposits (L1→L2) and the full 3-step withdrawal flow (initiate → prove → finalize).
 
-First, run the development server:
+Built as an alternative to paid bridge-as-a-service solutions.
+
+## Features
+
+- **Single config file** — edit `src/config/bridge.config.ts` and deploy
+- **Full withdrawal lifecycle** — initiate, prove (after ~1hr), finalize (after 7-day challenge period)
+- **Transaction persistence** — localStorage tracks pending withdrawals so users can return to prove/finalize
+- **ERC-20 support** — bridge any token pair with automatic approval flow
+- **Wallet connection** — RainbowKit with MetaMask, Coinbase Wallet, WalletConnect, and more
+- **Dark theme** — Superbridge-inspired card-based design with gradient background
+- **Mobile responsive**
+
+## Tech Stack
+
+- Next.js 14+ (App Router)
+- Tailwind CSS + shadcn/ui
+- RainbowKit + wagmi v2
+- viem with OP Stack extensions
+- Zustand (transaction persistence)
+- TanStack Query
+
+## Quick Start
+
+```bash
+git clone <your-repo-url>
+cd op-bridge-ui
+npm install
+```
+
+### 1. Configure your chain
+
+Edit `src/config/bridge.config.ts` with your chain's details:
+
+- L1/L2 chain info (chainId, RPC URL, block explorer)
+- Contract addresses from your op-deployer output:
+  - `OptimismPortalProxy`
+  - `L1StandardBridgeProxy`
+  - `L1CrossDomainMessengerProxy`
+  - `DisputeGameFactoryProxy`
+- Supported tokens (ETH is included by default)
+- Branding (app name, logo, theme colors)
+
+### 2. Set WalletConnect Project ID
+
+Create a `.env.local` file:
+
+```
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
+```
+
+Get a free project ID at [cloud.walletconnect.com](https://cloud.walletconnect.com/).
+
+### 3. Run
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Bridge Flows
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Deposit (L1 → L2)
+1. Connect wallet on L1
+2. Select token and enter amount
+3. Review and confirm transaction
+4. Funds arrive on L2 in ~3-10 minutes
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Withdrawal (L2 → L1)
+1. Connect wallet on L2
+2. Select token and enter amount
+3. Confirm withdrawal initiation
+4. **Wait ~1 hour** for the output root to be published
+5. Return and click **Prove** (L1 transaction)
+6. **Wait ~7 days** for the challenge period
+7. Return and click **Finalize** (L1 transaction)
 
-## Learn More
+## Compatibility
 
-To learn more about Next.js, take a look at the following resources:
+- **op-contracts**: v5.0.0+ (fault proofs via DisputeGameFactory)
+- **op-deployer**: v0.5.2+
+- Also supports older chains with L2OutputOracle (set `L2OutputOracleProxy` in config)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Deployment
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run build
+```
 
-## Deploy on Vercel
+Deploy the `.next` output to Vercel, Cloudflare Pages, or any Node.js host.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT

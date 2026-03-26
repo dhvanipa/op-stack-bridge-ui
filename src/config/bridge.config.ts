@@ -1,0 +1,102 @@
+// ============================================================================
+// BRIDGE CONFIGURATION
+// This is the ONLY file you need to edit to deploy your own OP Stack bridge UI.
+// Fill in your chain details, contract addresses, and supported tokens below.
+// ============================================================================
+
+export interface TokenConfig {
+  symbol: string;
+  name: string;
+  decimals: number;
+  l1Address: `0x${string}` | "native"; // 'native' for ETH
+  l2Address: `0x${string}` | "native";
+  logoUrl?: string;
+}
+
+export interface BridgeConfig {
+  appName: string;
+  logoUrl: string;
+  theme: {
+    primaryColor: string;
+    gradientFrom: string;
+    gradientTo: string;
+  };
+  l1: {
+    chainId: number;
+    name: string;
+    rpcUrl: string;
+    blockExplorer: string;
+    nativeCurrency: { name: string; symbol: string; decimals: number };
+  };
+  l2: {
+    chainId: number;
+    name: string;
+    rpcUrl: string;
+    blockExplorer: string;
+    nativeCurrency: { name: string; symbol: string; decimals: number };
+  };
+  contracts: {
+    OptimismPortalProxy: `0x${string}`;
+    L1StandardBridgeProxy: `0x${string}`;
+    L1CrossDomainMessengerProxy: `0x${string}`;
+    DisputeGameFactoryProxy: `0x${string}`;
+    L2OutputOracleProxy?: `0x${string}`;
+  };
+  tokens: TokenConfig[];
+}
+
+export const bridgeConfig: BridgeConfig = {
+  // ── Branding ──────────────────────────────────────────────────────────
+  appName: "OP Bridge",
+  logoUrl: "/logo.svg",
+  theme: {
+    primaryColor: "#6366f1",
+    gradientFrom: "#0f0c29",
+    gradientTo: "#302b63",
+  },
+
+  // ── L1 (Settlement Layer) ─────────────────────────────────────────────
+  l1: {
+    chainId: 1,
+    name: "Ethereum",
+    rpcUrl: "https://eth.llamarpc.com",
+    blockExplorer: "https://etherscan.io",
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+  },
+
+  // ── L2 (Your OP Stack Rollup) ─────────────────────────────────────────
+  l2: {
+    chainId: 10, // Replace with your L2 chain ID
+    name: "My L2", // Replace with your L2 name
+    rpcUrl: "https://mainnet.optimism.io", // Replace with your L2 RPC
+    blockExplorer: "https://optimistic.etherscan.io", // Replace with your explorer
+    nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+  },
+
+  // ── L1 Contract Addresses (from your op-deployer output) ──────────────
+  contracts: {
+    OptimismPortalProxy: "0x0000000000000000000000000000000000000000",
+    L1StandardBridgeProxy: "0x0000000000000000000000000000000000000000",
+    L1CrossDomainMessengerProxy: "0x0000000000000000000000000000000000000000",
+    DisputeGameFactoryProxy: "0x0000000000000000000000000000000000000000",
+  },
+
+  // ── Supported Tokens ──────────────────────────────────────────────────
+  tokens: [
+    {
+      symbol: "ETH",
+      name: "Ether",
+      decimals: 18,
+      l1Address: "native",
+      l2Address: "native",
+    },
+    // Add ERC-20 tokens here:
+    // {
+    //   symbol: "USDC",
+    //   name: "USD Coin",
+    //   decimals: 6,
+    //   l1Address: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    //   l2Address: "0x7F5c764cBc14f9669B88837ca1490cCa17c31607",
+    // },
+  ],
+};
