@@ -30,28 +30,28 @@ export const l2Chain = defineChain({
   sourceId: bridgeConfig.l1.chainId,
   contracts: {
     ...chainConfig.contracts,
-    portal: [
-      {
+    portal: {
+      [bridgeConfig.l1.chainId]: {
         address: bridgeConfig.contracts.OptimismPortalProxy,
       },
-    ],
-    l1StandardBridge: [
-      {
+    },
+    l1StandardBridge: {
+      [bridgeConfig.l1.chainId]: {
         address: bridgeConfig.contracts.L1StandardBridgeProxy,
       },
-    ],
-    disputeGameFactory: [
-      {
+    },
+    disputeGameFactory: {
+      [bridgeConfig.l1.chainId]: {
         address: bridgeConfig.contracts.DisputeGameFactoryProxy,
       },
-    ],
+    },
     ...(bridgeConfig.contracts.L2OutputOracleProxy
       ? {
-          l2OutputOracle: [
-            {
+          l2OutputOracle: {
+            [bridgeConfig.l1.chainId]: {
               address: bridgeConfig.contracts.L2OutputOracleProxy,
             },
-          ],
+          },
         }
       : {}),
   },
