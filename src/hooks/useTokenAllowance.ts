@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { ERC20ABI } from "@/lib/abis";
 import { bridgeConfig } from "@/config/bridge.config";
@@ -34,6 +35,10 @@ export function useTokenAllowance(
     useWaitForTransactionReceipt({
       hash: approveTxHash,
     });
+
+  useEffect(() => {
+    if (approvalConfirmed) refetch();
+  }, [approvalConfirmed, refetch]);
 
   const needsApproval =
     !isNative &&

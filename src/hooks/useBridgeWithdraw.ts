@@ -43,7 +43,7 @@ export function useBridgeWithdraw() {
             request: {
               to: address,
               value: parsedAmount,
-              gas: 21_000n,
+              gas: 100_000n,
             },
           });
         } else {

@@ -33,8 +33,9 @@ export function AmountInput({
     }
   };
 
+  const isEth = selectedToken.symbol === "ETH";
   const usdValue =
-    ethPrice && amount && parseFloat(amount) > 0
+    isEth && ethPrice && amount && parseFloat(amount) > 0
       ? (parseFloat(amount) * ethPrice).toLocaleString(undefined, {
           style: "currency",
           currency: "USD",

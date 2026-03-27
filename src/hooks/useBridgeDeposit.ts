@@ -14,7 +14,7 @@ import { useTransactionHistory } from "./useTransactionHistory";
 export function useBridgeDeposit() {
   const { address } = useAccount();
   const { data: walletClient } = useWalletClient();
-  const { addTransaction } = useTransactionHistory(address);
+  const { addTransaction, updateTransaction } = useTransactionHistory(address);
   const [isLoading, setIsLoading] = useState(false);
   const [txHash, setTxHash] = useState<`0x${string}` | undefined>();
   const [error, setError] = useState<string | undefined>();
@@ -69,14 +69,11 @@ export function useBridgeDeposit() {
 
         setTxHash(hash);
 
-        // Wait for L1 receipt before marking success
-        await publicClientL1.waitForTransactionReceipt({ hash });
-
-        // Save to transaction history
+        // Persist immediately so the tx isn't lost if the page closes
         addTransaction({
           id: hash,
           direction: "deposit",
-          status: "confirmed",
+          status: "pending",
           l1TxHash: hash,
           amount,
           tokenSymbol: token.symbol,
@@ -84,6 +81,10 @@ export function useBridgeDeposit() {
           to: address,
           timestamp: Date.now(),
         });
+
+        // Wait for L1 receipt then update status
+        await publicClientL1.waitForTransactionReceipt({ hash });
+        updateTransaction(hash, { status: "confirmed" });
 
         setIsSuccess(true);
       } catch (err) {
