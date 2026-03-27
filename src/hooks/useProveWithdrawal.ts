@@ -5,7 +5,7 @@ import { useWalletClient } from "wagmi";
 import { walletActionsL1 } from "viem/op-stack";
 import { publicClientL1, publicClientL2 } from "@/lib/clients";
 import { l2Chain } from "@/config/chains";
-import { deserializeBigInt, classifyTransactionError } from "@/lib/utils";
+import { deserializeBigInt, classifyTransactionError, validateReceiptShape } from "@/lib/utils";
 
 import type { TransactionRecord } from "@/types/transaction";
 
@@ -15,7 +15,12 @@ type WithdrawalReceipt = Parameters<
 
 async function resolveReceipt(tx: TransactionRecord): Promise<WithdrawalReceipt | null> {
   if (tx.receiptData) {
-    return deserializeBigInt(tx.receiptData) as WithdrawalReceipt;
+    const parsed = deserializeBigInt(tx.receiptData);
+    if (!validateReceiptShape(parsed)) {
+      console.error("Invalid receipt data for tx", tx.id);
+      return null;
+    }
+    return parsed as WithdrawalReceipt;
   }
   if (tx.l2TxHash) {
     return (await publicClientL2.getTransactionReceipt({
@@ -25,7 +30,11 @@ async function resolveReceipt(tx: TransactionRecord): Promise<WithdrawalReceipt 
   return null;
 }
 
-export function useProveWithdrawal() {
+interface UseProveWithdrawalOptions {
+  onSuccess?: (txId: string, proveTxHash: `0x${string}`) => void;
+}
+
+export function useProveWithdrawal({ onSuccess }: UseProveWithdrawalOptions = {}) {
   const { data: walletClient } = useWalletClient();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
@@ -44,9 +53,6 @@ export function useProveWithdrawal() {
         const receipt = await resolveReceipt(tx);
         if (!receipt) return;
 
-        // Build prove args — waitToProve resolves quickly if status is ready-to-prove
-        // l2Chain from defineChain is a generic Chain; OP Stack actions need typed
-        // contract addresses. Contracts are configured at runtime in chains.ts.
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const targetChain = l2Chain as any;
 
@@ -56,19 +62,21 @@ export function useProveWithdrawal() {
             targetChain,
           });
 
-        // Build the prove withdrawal parameters
         const proveArgs = await publicClientL2.buildProveWithdrawal({
           output,
           withdrawal: withdrawalForProof,
         });
 
-        // Execute prove on L1
         const hash = await l1Wallet.proveWithdrawal({
           ...proveArgs,
           targetChain,
         });
 
         setTxHash(hash);
+
+        // Persist status update immediately so it survives component unmount
+        onSuccess?.(tx.id, hash);
+
         return hash;
       } catch (err) {
         console.error("Prove error:", err);
@@ -77,7 +85,7 @@ export function useProveWithdrawal() {
         setIsLoading(false);
       }
     },
-    [walletClient]
+    [walletClient, onSuccess]
   );
 
   return { prove, isLoading, txHash, error };

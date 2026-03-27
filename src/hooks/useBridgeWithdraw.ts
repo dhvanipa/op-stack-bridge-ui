@@ -21,7 +21,7 @@ export function useBridgeWithdraw() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const withdraw = useCallback(
-    async (amount: string, token: TokenConfig) => {
+    async (amount: string, token: TokenConfig, balance?: bigint) => {
       if (!walletClient || !address) return;
 
       setIsLoading(true);
@@ -32,6 +32,18 @@ export function useBridgeWithdraw() {
       try {
         const l2Wallet = walletClient.extend(walletActionsL2());
         const parsedAmount = parseUnits(amount, token.decimals);
+
+        if (parsedAmount <= 0n) {
+          setError("Amount must be greater than zero");
+          setIsLoading(false);
+          return;
+        }
+
+        if (balance !== undefined && parsedAmount > balance) {
+          setError("Amount exceeds balance");
+          setIsLoading(false);
+          return;
+        }
         const isNative = token.l2Address === "native";
 
         let hash: `0x${string}`;

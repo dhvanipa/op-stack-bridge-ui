@@ -9,7 +9,7 @@ import { useAccount, useChainId, useSwitchChain } from "wagmi";
 import { bridgeConfig } from "@/config/bridge.config";
 import { toast } from "sonner";
 import type { TransactionRecord } from "@/types/transaction";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 interface WithdrawalActionsProps {
   tx: TransactionRecord;
@@ -20,40 +20,41 @@ export function WithdrawalActions({ tx }: WithdrawalActionsProps) {
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
   const { updateTransaction } = useTransactionHistory(address);
+
+  const handleProveSuccess = useCallback(
+    (txId: string, proveTxHash: `0x${string}`) => {
+      updateTransaction(txId, {
+        status: "waiting-to-finalize",
+        proveTxHash,
+      });
+      toast.success("Withdrawal proved! Finalization available in ~7 days.");
+    },
+    [updateTransaction]
+  );
+
+  const handleFinalizeSuccess = useCallback(
+    (txId: string, finalizeTxHash: `0x${string}`) => {
+      updateTransaction(txId, {
+        status: "finalized",
+        finalizeTxHash,
+      });
+      toast.success("Withdrawal finalized! Funds are now on L1.");
+    },
+    [updateTransaction]
+  );
+
   const {
     prove,
     isLoading: isProving,
     error: proveError,
-    txHash: proveHash,
-  } = useProveWithdrawal();
+  } = useProveWithdrawal({ onSuccess: handleProveSuccess });
   const {
     finalize,
     isLoading: isFinalizing,
     error: finalizeError,
-    txHash: finalizeHash,
-  } = useFinalizeWithdrawal();
+  } = useFinalizeWithdrawal({ onSuccess: handleFinalizeSuccess });
 
   const needsL1 = chainId !== bridgeConfig.l1.chainId;
-
-  useEffect(() => {
-    if (proveHash) {
-      updateTransaction(tx.id, {
-        status: "waiting-to-finalize",
-        proveTxHash: proveHash,
-      });
-      toast.success("Withdrawal proved! Finalization available in ~7 days.");
-    }
-  }, [proveHash, tx.id, updateTransaction]);
-
-  useEffect(() => {
-    if (finalizeHash) {
-      updateTransaction(tx.id, {
-        status: "finalized",
-        finalizeTxHash: finalizeHash,
-      });
-      toast.success("Withdrawal finalized! Funds are now on L1.");
-    }
-  }, [finalizeHash, tx.id, updateTransaction]);
 
   useEffect(() => {
     if (proveError) toast.error(proveError);

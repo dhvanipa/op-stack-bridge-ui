@@ -1,11 +1,19 @@
 import { type NextRequest } from "next/server";
 import { bridgeConfig } from "@/config/bridge.config";
 
-// Allowed explorer API base URLs (prevent open proxy)
-const ALLOWED_URLS = [
-  bridgeConfig.l1.explorerApiUrl,
-  bridgeConfig.l2.explorerApiUrl,
-].filter(Boolean) as string[];
+// Pre-parse allowed explorer API base URLs at module load.
+// Each entry stores the origin and a pathname prefix that MUST be at least "/api"
+// to prevent the proxy from forwarding requests to arbitrary paths on the origin.
+const ALLOWED_BASES = [bridgeConfig.l1.explorerApiUrl, bridgeConfig.l2.explorerApiUrl]
+  .filter(Boolean)
+  .map((raw) => {
+    const u = new URL(raw as string);
+    // Ensure pathname ends with "/" for correct prefix matching
+    const pathname = u.pathname.endsWith("/") ? u.pathname : u.pathname + "/";
+    return { origin: u.origin, pathname };
+  })
+  // Reject entries where the pathname is just "/" — that would allow any path on the origin
+  .filter((entry) => entry.pathname.length > 1);
 
 export async function GET(request: NextRequest) {
   const url = request.nextUrl.searchParams.get("url");
@@ -14,7 +22,7 @@ export async function GET(request: NextRequest) {
     return Response.json({ error: "Missing url parameter" }, { status: 400 });
   }
 
-  // Validate the URL origin matches one of our configured explorer APIs
+  // Only allow http/https schemes — blocks file://, data://, etc.
   let parsedUrl: URL;
   try {
     parsedUrl = new URL(url);
@@ -22,10 +30,20 @@ export async function GET(request: NextRequest) {
     return Response.json({ error: "Invalid URL" }, { status: 400 });
   }
 
-  const isAllowed = ALLOWED_URLS.some((allowed) => {
-    const allowedUrl = new URL(allowed);
-    return parsedUrl.origin === allowedUrl.origin && parsedUrl.pathname.startsWith(allowedUrl.pathname);
-  });
+  if (parsedUrl.protocol !== "https:" && parsedUrl.protocol !== "http:") {
+    return Response.json({ error: "Invalid URL scheme" }, { status: 400 });
+  }
+
+  // Strip any userinfo (user:pass@host) to prevent credential-smuggling attacks
+  if (parsedUrl.username || parsedUrl.password) {
+    return Response.json({ error: "URL must not contain credentials" }, { status: 400 });
+  }
+
+  const requestPath = parsedUrl.pathname + "/";
+  const isAllowed = ALLOWED_BASES.some(
+    (base) => parsedUrl.origin === base.origin && requestPath.startsWith(base.pathname)
+  );
+
   if (!isAllowed) {
     return Response.json({ error: "URL not allowed" }, { status: 403 });
   }

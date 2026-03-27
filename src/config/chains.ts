@@ -1,6 +1,13 @@
-import { defineChain } from "viem";
+import { defineChain, isAddress } from "viem";
 import { chainConfig } from "viem/op-stack";
 import { bridgeConfig } from "./bridge.config";
+
+// Validate contract addresses at module load to catch config typos early
+for (const [name, address] of Object.entries(bridgeConfig.contracts)) {
+  if (address && !isAddress(address)) {
+    throw new Error(`Invalid contract address for ${name}: ${address}`);
+  }
+}
 
 export const l1Chain = defineChain({
   id: bridgeConfig.l1.chainId,

@@ -100,9 +100,9 @@ export function BridgeCard() {
 
   const handleConfirm = () => {
     if (direction === "deposit") {
-      deposit(amount, selectedToken);
+      deposit(amount, selectedToken, balance);
     } else {
-      withdraw(amount, selectedToken);
+      withdraw(amount, selectedToken, balance);
     }
   };
 

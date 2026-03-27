@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { publicClientL1, publicClientL2 } from "@/lib/clients";
 import { l2Chain } from "@/config/chains";
-import { deserializeBigInt } from "@/lib/utils";
+import { deserializeBigInt, validateReceiptShape } from "@/lib/utils";
 import type { TransactionRecord, WithdrawalStatus } from "@/types/transaction";
 
 type WithdrawalReceipt = Parameters<
@@ -23,7 +23,12 @@ export function useWithdrawalStatus(tx: TransactionRecord | undefined) {
       let receipt: WithdrawalReceipt | null = null;
 
       if (tx.receiptData) {
-        receipt = deserializeBigInt(tx.receiptData) as WithdrawalReceipt;
+        const parsed = deserializeBigInt(tx.receiptData);
+        if (!validateReceiptShape(parsed)) {
+          console.error("Invalid receipt data for tx", tx.id);
+          return null;
+        }
+        receipt = parsed as WithdrawalReceipt;
       } else if (tx.l2TxHash) {
         receipt = (await publicClientL2.getTransactionReceipt({
           hash: tx.l2TxHash,

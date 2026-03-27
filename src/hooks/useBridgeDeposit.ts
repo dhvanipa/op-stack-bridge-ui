@@ -22,7 +22,7 @@ export function useBridgeDeposit() {
   const [isSuccess, setIsSuccess] = useState(false);
 
   const deposit = useCallback(
-    async (amount: string, token: TokenConfig) => {
+    async (amount: string, token: TokenConfig, balance?: bigint) => {
       if (!walletClient || !address) return;
 
       setIsLoading(true);
@@ -33,6 +33,18 @@ export function useBridgeDeposit() {
       try {
         const l1Wallet = walletClient.extend(walletActionsL1());
         const parsedAmount = parseUnits(amount, token.decimals);
+
+        if (parsedAmount <= 0n) {
+          setError("Amount must be greater than zero");
+          setIsLoading(false);
+          return;
+        }
+
+        if (balance !== undefined && parsedAmount > balance) {
+          setError("Amount exceeds balance");
+          setIsLoading(false);
+          return;
+        }
         const isNative = token.l1Address === "native";
 
         let hash: `0x${string}`;
