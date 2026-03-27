@@ -11,19 +11,35 @@ interface ChainSelectorProps {
   onFlip: () => void;
 }
 
-function ChainRow({ label, chainName, iconUrl }: { label: string; chainName: string; iconUrl?: string }) {
+function ChainRow({
+  label,
+  chainName,
+  iconUrl,
+}: {
+  label: string;
+  chainName: string;
+  iconUrl?: string;
+}) {
   return (
-    <div className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3">
-      <span className="text-sm text-muted-foreground">{label}</span>
-      <div className="flex items-center gap-2">
+    <div className="flex items-center justify-between rounded-xl bg-white/[0.04] border border-white/[0.06] px-4 py-3 transition-colors duration-200 hover:bg-white/[0.06]">
+      <span className="text-xs font-medium uppercase tracking-widest text-white/40">
+        {label}
+      </span>
+      <div className="flex items-center gap-2.5">
         {iconUrl ? (
-          <Image src={iconUrl} alt={chainName} width={24} height={24} className="rounded-full" />
+          <Image
+            src={iconUrl}
+            alt={chainName}
+            width={22}
+            height={22}
+            className="rounded-full ring-1 ring-white/10"
+          />
         ) : (
-          <div className="h-6 w-6 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold">
+          <div className="h-[22px] w-[22px] rounded-full bg-white/10 flex items-center justify-center text-[10px] font-bold">
             {chainName.charAt(0)}
           </div>
         )}
-        <span className="font-medium text-white">{chainName}</span>
+        <span className="font-medium text-[15px] text-white">{chainName}</span>
       </div>
     </div>
   );
@@ -44,9 +60,9 @@ export function ChainSelector({ direction, onFlip }: ChainSelectorProps) {
           variant="outline"
           size="icon"
           onClick={onFlip}
-          className="h-8 w-8 rounded-full border-white/20 bg-card hover:bg-white/10 transition-transform hover:rotate-180 duration-300"
+          className="h-9 w-9 rounded-full border-white/[0.12] bg-card shadow-lg shadow-black/20 hover:bg-white/10 transition-all duration-300 hover:rotate-180 hover:border-indigo-500/30 hover:shadow-indigo-500/10"
         >
-          <ArrowUpDown className="h-3.5 w-3.5" />
+          <ArrowUpDown className="h-3.5 w-3.5 text-white/70" />
         </Button>
       </div>
 

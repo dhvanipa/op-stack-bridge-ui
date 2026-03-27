@@ -62,8 +62,8 @@ export function WithdrawalActions({ tx }: WithdrawalActionsProps) {
 
   if (tx.status === "waiting-to-prove") {
     return (
-      <span className="text-xs text-muted-foreground">
-        Waiting for output root (~12 hours)
+      <span className="text-xs text-white/30 font-medium">
+        Waiting for output root (~12h)
       </span>
     );
   }
@@ -73,8 +73,8 @@ export function WithdrawalActions({ tx }: WithdrawalActionsProps) {
       return (
         <Button
           size="sm"
-          variant="secondary"
           onClick={() => switchChain({ chainId: bridgeConfig.l1.chainId })}
+          className="h-7 text-xs bg-white/[0.08] hover:bg-white/[0.12] border border-white/[0.1] text-white"
         >
           Switch to {bridgeConfig.l1.name}
         </Button>
@@ -85,10 +85,11 @@ export function WithdrawalActions({ tx }: WithdrawalActionsProps) {
         size="sm"
         onClick={() => prove(tx)}
         disabled={isProving}
-        className="bg-indigo-600 hover:bg-indigo-700"
+        className="h-7 text-xs font-semibold text-white border-0 shadow-sm shadow-indigo-500/20"
+        style={{ background: `linear-gradient(135deg, ${bridgeConfig.theme.primaryColor}, #8b5cf6)` }}
       >
         {isProving ? (
-          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          <Loader2 className="h-3 w-3 animate-spin" />
         ) : (
           "Prove"
         )}
@@ -98,8 +99,8 @@ export function WithdrawalActions({ tx }: WithdrawalActionsProps) {
 
   if (tx.status === "waiting-to-finalize") {
     return (
-      <span className="text-xs text-muted-foreground">
-        Challenge period (~7 days)
+      <span className="text-xs text-white/30 font-medium">
+        Challenge period (~7d)
       </span>
     );
   }
@@ -109,8 +110,8 @@ export function WithdrawalActions({ tx }: WithdrawalActionsProps) {
       return (
         <Button
           size="sm"
-          variant="secondary"
           onClick={() => switchChain({ chainId: bridgeConfig.l1.chainId })}
+          className="h-7 text-xs bg-white/[0.08] hover:bg-white/[0.12] border border-white/[0.1] text-white"
         >
           Switch to {bridgeConfig.l1.name}
         </Button>
@@ -121,10 +122,11 @@ export function WithdrawalActions({ tx }: WithdrawalActionsProps) {
         size="sm"
         onClick={() => finalize(tx)}
         disabled={isFinalizing}
-        className="bg-indigo-600 hover:bg-indigo-700"
+        className="h-7 text-xs font-semibold text-white border-0 shadow-sm shadow-indigo-500/20"
+        style={{ background: `linear-gradient(135deg, ${bridgeConfig.theme.primaryColor}, #8b5cf6)` }}
       >
         {isFinalizing ? (
-          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          <Loader2 className="h-3 w-3 animate-spin" />
         ) : (
           "Finalize"
         )}

@@ -117,8 +117,8 @@ export function BridgeCard() {
 
   return (
     <>
-      <Card className="w-full max-w-[480px] mx-auto border-white/10 bg-card/80 backdrop-blur-xl shadow-2xl">
-        <CardContent className="p-6 space-y-4">
+      <Card className="card-glow animate-fade-in-up w-full max-w-[460px] mx-auto border-white/[0.08] bg-card/90 backdrop-blur-2xl shadow-[0_8px_40px_-12px_rgba(0,0,0,0.5),0_0_80px_-20px_rgba(99,102,241,0.08)]">
+        <CardContent className="p-5 sm:p-6 space-y-4">
           <Tabs
             value={direction}
             onValueChange={(v) => {
@@ -126,11 +126,11 @@ export function BridgeCard() {
               setAmount("");
             }}
           >
-            <TabsList className="w-full bg-white/5">
-              <TabsTrigger value="deposit" className="flex-1">
+            <TabsList className="w-full bg-white/[0.04] border border-white/[0.06]">
+              <TabsTrigger value="deposit" className="flex-1 font-medium tracking-wide text-[13px]">
                 Deposit
               </TabsTrigger>
-              <TabsTrigger value="withdrawal" className="flex-1">
+              <TabsTrigger value="withdrawal" className="flex-1 font-medium tracking-wide text-[13px]">
                 Withdraw
               </TabsTrigger>
             </TabsList>

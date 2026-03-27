@@ -44,7 +44,7 @@ export function AmountInput({
       : null;
 
   return (
-    <div className="rounded-xl bg-white/5 p-4 space-y-2">
+    <div className="input-glow rounded-xl bg-white/[0.04] border border-white/[0.06] p-4 space-y-3 transition-all duration-200">
       <div className="flex items-center gap-2">
         <Input
           type="text"
@@ -57,7 +57,7 @@ export function AmountInput({
               onAmountChange(val);
             }
           }}
-          className="border-0 bg-transparent !text-3xl md:!text-3xl font-semibold text-white placeholder:text-white/30 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 p-0 !h-auto"
+          className="border-0 bg-transparent !text-[32px] font-mono font-semibold text-white placeholder:text-white/20 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 p-0 !h-auto tracking-tight"
         />
         <TokenSelector
           selectedToken={selectedToken}
@@ -66,11 +66,11 @@ export function AmountInput({
       </div>
 
       {usdValue && (
-        <p className="text-sm text-muted-foreground">{usdValue}</p>
+        <p className="text-sm font-mono text-white/40">{usdValue}</p>
       )}
 
       <div className="flex items-center justify-between text-sm">
-        <span className="text-muted-foreground">
+        <span className="text-white/40">
           {isLoadingBalance
             ? "Loading..."
             : balance !== undefined
@@ -82,7 +82,7 @@ export function AmountInput({
             variant="link"
             size="sm"
             onClick={handleMax}
-            className="text-indigo-400 hover:text-indigo-300 h-auto p-0"
+            className="text-indigo-400 hover:text-indigo-300 h-auto p-0 font-medium text-xs uppercase tracking-wider"
           >
             Max
           </Button>

@@ -36,14 +36,16 @@ export function BridgeButton({
   const chainId = useChainId();
   const { switchChain } = useSwitchChain();
 
+  const primaryGradient = `linear-gradient(135deg, ${bridgeConfig.theme.primaryColor}, #8b5cf6)`;
+
   if (!isConnected) {
     return (
       <ConnectButton.Custom>
         {({ openConnectModal }) => (
           <Button
             onClick={openConnectModal}
-            className="w-full h-14 text-lg font-semibold"
-            style={{ backgroundColor: bridgeConfig.theme.primaryColor }}
+            className="btn-glow w-full h-14 text-[15px] font-semibold tracking-wide text-white border-0 shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all duration-300"
+            style={{ background: primaryGradient }}
           >
             Connect Wallet
           </Button>
@@ -61,8 +63,7 @@ export function BridgeButton({
     return (
       <Button
         onClick={() => switchChain({ chainId: requiredChainId })}
-        className="w-full h-14 text-lg font-semibold"
-        variant="secondary"
+        className="w-full h-14 text-[15px] font-semibold tracking-wide bg-white/[0.08] border border-white/[0.1] hover:bg-white/[0.12] text-white transition-all duration-200"
       >
         Switch to {chainName}
       </Button>
@@ -71,7 +72,7 @@ export function BridgeButton({
 
   if (!amount || parseFloat(amount) === 0) {
     return (
-      <Button disabled className="w-full h-14 text-lg font-semibold">
+      <Button disabled className="w-full h-14 text-[15px] font-semibold tracking-wide bg-white/[0.06] text-white/30 border border-white/[0.04]">
         Enter Amount
       </Button>
     );
@@ -86,7 +87,7 @@ export function BridgeButton({
 
   if (parsedAmount === null) {
     return (
-      <Button disabled className="w-full h-14 text-lg font-semibold">
+      <Button disabled className="w-full h-14 text-[15px] font-semibold tracking-wide bg-white/[0.06] text-white/30 border border-white/[0.04]">
         Invalid Amount
       </Button>
     );
@@ -94,7 +95,7 @@ export function BridgeButton({
 
   if (balance !== undefined && parsedAmount > balance) {
     return (
-      <Button disabled className="w-full h-14 text-lg font-semibold">
+      <Button disabled className="w-full h-14 text-[15px] font-semibold tracking-wide bg-red-500/10 text-red-400/70 border border-red-500/10">
         Insufficient Balance
       </Button>
     );
@@ -105,12 +106,11 @@ export function BridgeButton({
       <Button
         onClick={onApprove}
         disabled={isApproving}
-        className="w-full h-14 text-lg font-semibold"
-        variant="secondary"
+        className="w-full h-14 text-[15px] font-semibold tracking-wide bg-white/[0.08] border border-white/[0.1] hover:bg-white/[0.12] text-white transition-all duration-200"
       >
         {isApproving ? (
           <>
-            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            <Loader2 className="mr-2 h-4.5 w-4.5 animate-spin" />
             Approving...
           </>
         ) : (
@@ -124,12 +124,12 @@ export function BridgeButton({
     <Button
       onClick={onBridge}
       disabled={isBridging}
-      className="w-full h-14 text-lg font-semibold"
-      style={{ backgroundColor: bridgeConfig.theme.primaryColor }}
+      className="btn-glow w-full h-14 text-[15px] font-semibold tracking-wide text-white border-0 shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 transition-all duration-300"
+      style={{ background: primaryGradient }}
     >
       {isBridging ? (
         <>
-          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+          <Loader2 className="mr-2 h-4.5 w-4.5 animate-spin" />
           Bridging...
         </>
       ) : (
