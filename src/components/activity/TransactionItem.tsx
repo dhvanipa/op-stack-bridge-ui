@@ -4,6 +4,7 @@ import { ArrowDown, ArrowUp, ExternalLink } from "lucide-react";
 import { StatusBadge } from "./StatusBadge";
 import { WithdrawalActions } from "./WithdrawalActions";
 import { formatTimeAgo } from "@/lib/utils";
+import { formatUnits } from "viem";
 import { bridgeConfig } from "@/config/bridge.config";
 import type { TransactionRecord } from "@/types/transaction";
 import { useWithdrawalStatus } from "@/hooks/useWithdrawalStatus";
@@ -52,7 +53,7 @@ export function TransactionItem({ tx }: { tx: TransactionRecord }) {
         </div>
 
         <p className="text-sm text-muted-foreground mt-0.5">
-          {tx.amount} {tx.tokenSymbol}
+          {formatUnits(BigInt(tx.amount), tx.tokenDecimals)} {tx.tokenSymbol}
         </p>
 
         <div className="flex items-center justify-between mt-2">

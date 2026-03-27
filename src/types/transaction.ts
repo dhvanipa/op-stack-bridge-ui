@@ -19,12 +19,12 @@ export interface TransactionRecord {
   l2TxHash?: `0x${string}`;
   proveTxHash?: `0x${string}`;
   finalizeTxHash?: `0x${string}`;
-  amount: string;
+  amount: string; // wei string
   tokenSymbol: string;
+  tokenDecimals: number;
   from: `0x${string}`;
   to: `0x${string}`;
   timestamp: number;
-  // Serialized receipt/withdrawal data needed for prove/finalize
-  withdrawalData?: string;
+  // Serialized receipt data needed for prove/finalize
   receiptData?: string;
 }
