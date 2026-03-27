@@ -27,7 +27,7 @@ Built as an alternative to paid bridge-as-a-service solutions.
 
 ```bash
 git clone <your-repo-url>
-cd op-bridge-ui
+cd op-stack-bridge-ui
 pnpm install
 ```
 
