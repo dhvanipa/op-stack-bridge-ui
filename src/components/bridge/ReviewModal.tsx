@@ -30,6 +30,7 @@ interface ReviewModalProps {
   isConfirming: boolean;
   txHash?: string;
   isSuccess?: boolean;
+  error?: string;
 }
 
 export function ReviewModal({
@@ -42,6 +43,7 @@ export function ReviewModal({
   isConfirming,
   txHash,
   isSuccess,
+  error,
 }: ReviewModalProps) {
   const [checks, setChecks] = useState<boolean[]>(
     direction === "deposit" ? [false] : [false, false, false]
@@ -178,6 +180,12 @@ export function ReviewModal({
                 </>
               )}
             </div>
+
+            {error && (
+              <div className="rounded-lg bg-red-500/10 border border-red-500/20 px-4 py-3 text-sm text-red-400">
+                {error}
+              </div>
+            )}
 
             <DialogFooter>
               <Button

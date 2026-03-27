@@ -83,6 +83,7 @@ export function useBridgeDeposit() {
 
         setIsSuccess(true);
       } catch (err) {
+        console.error("Deposit error:", err);
         const message =
           err instanceof Error ? err.message : "Deposit failed";
         if (message.includes("User rejected") || message.includes("denied")) {

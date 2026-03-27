@@ -68,6 +68,7 @@ export function BridgeCard() {
     isLoading: isDepositing,
     txHash: depositTxHash,
     isSuccess: depositSuccess,
+    error: depositError,
     reset: resetDeposit,
   } = useBridgeDeposit();
 
@@ -76,6 +77,7 @@ export function BridgeCard() {
     isLoading: isWithdrawing,
     txHash: withdrawTxHash,
     isSuccess: withdrawSuccess,
+    error: withdrawError,
     reset: resetWithdraw,
   } = useBridgeWithdraw();
 
@@ -87,6 +89,7 @@ export function BridgeCard() {
   const isBridging = isDepositing || isWithdrawing;
   const txHash = depositTxHash || withdrawTxHash;
   const isSuccess = depositSuccess || withdrawSuccess;
+  const bridgeError = depositError || withdrawError;
 
   const handleFlip = () => {
     setDirection((d) => (d === "deposit" ? "withdrawal" : "deposit"));
@@ -170,6 +173,7 @@ export function BridgeCard() {
         isConfirming={isBridging}
         txHash={txHash}
         isSuccess={isSuccess}
+        error={bridgeError}
       />
     </>
   );
