@@ -12,6 +12,7 @@ export const l1Chain = defineChain({
   blockExplorers: {
     default: { name: "Explorer", url: bridgeConfig.l1.blockExplorer },
   },
+  ...(bridgeConfig.l1.iconUrl ? { iconUrl: bridgeConfig.l1.iconUrl } : {}),
 });
 
 export const l2Chain = defineChain({
@@ -25,6 +26,7 @@ export const l2Chain = defineChain({
   blockExplorers: {
     default: { name: "Explorer", url: bridgeConfig.l2.blockExplorer },
   },
+  ...(bridgeConfig.l2.iconUrl ? { iconUrl: bridgeConfig.l2.iconUrl } : {}),
   sourceId: bridgeConfig.l1.chainId,
   contracts: {
     ...chainConfig.contracts,

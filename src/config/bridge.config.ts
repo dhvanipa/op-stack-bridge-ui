@@ -27,6 +27,7 @@ export interface BridgeConfig {
     rpcUrl: string;
     blockExplorer: string;
     nativeCurrency: { name: string; symbol: string; decimals: number };
+    iconUrl?: string;
   };
   l2: {
     chainId: number;
@@ -34,6 +35,7 @@ export interface BridgeConfig {
     rpcUrl: string;
     blockExplorer: string;
     nativeCurrency: { name: string; symbol: string; decimals: number };
+    iconUrl?: string;
   };
   contracts: {
     OptimismPortalProxy: `0x${string}`;
@@ -59,9 +61,10 @@ export const bridgeConfig: BridgeConfig = {
   l1: {
     chainId: 1,
     name: "Ethereum",
-    rpcUrl: "https://eth.llamarpc.com",
+    rpcUrl: "https://ethereum-rpc.publicnode.com",
     blockExplorer: "https://etherscan.io",
     nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    iconUrl: "/ethereum.svg",
   },
 
   // ── L2 (Your OP Stack Rollup) ─────────────────────────────────────────
@@ -71,6 +74,7 @@ export const bridgeConfig: BridgeConfig = {
     rpcUrl: "https://rpc.dustproject.org", // Replace with your L2 RPC
     blockExplorer: "https://explorer.dustproject.org", // Replace with your explorer
     nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
+    iconUrl: "/dust.png", // Replace with your L2 chain icon
   },
 
   // ── L1 Contract Addresses (from your op-deployer output) ──────────────

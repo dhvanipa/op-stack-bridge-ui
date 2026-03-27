@@ -10,14 +10,18 @@ interface ChainSelectorProps {
   onFlip: () => void;
 }
 
-function ChainRow({ label, chainName }: { label: string; chainName: string }) {
+function ChainRow({ label, chainName, iconUrl }: { label: string; chainName: string; iconUrl?: string }) {
   return (
     <div className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3">
       <span className="text-sm text-muted-foreground">{label}</span>
       <div className="flex items-center gap-2">
-        <div className="h-6 w-6 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold">
-          {chainName.charAt(0)}
-        </div>
+        {iconUrl ? (
+          <img src={iconUrl} alt={chainName} className="h-6 w-6 rounded-full" />
+        ) : (
+          <div className="h-6 w-6 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold">
+            {chainName.charAt(0)}
+          </div>
+        )}
         <span className="font-medium text-white">{chainName}</span>
       </div>
     </div>
@@ -25,14 +29,14 @@ function ChainRow({ label, chainName }: { label: string; chainName: string }) {
 }
 
 export function ChainSelector({ direction, onFlip }: ChainSelectorProps) {
-  const fromChain =
-    direction === "deposit" ? bridgeConfig.l1.name : bridgeConfig.l2.name;
-  const toChain =
-    direction === "deposit" ? bridgeConfig.l2.name : bridgeConfig.l1.name;
+  const from =
+    direction === "deposit" ? bridgeConfig.l1 : bridgeConfig.l2;
+  const to =
+    direction === "deposit" ? bridgeConfig.l2 : bridgeConfig.l1;
 
   return (
     <div className="relative space-y-1">
-      <ChainRow label="From" chainName={fromChain} />
+      <ChainRow label="From" chainName={from.name} iconUrl={from.iconUrl} />
 
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
         <Button
@@ -45,7 +49,7 @@ export function ChainSelector({ direction, onFlip }: ChainSelectorProps) {
         </Button>
       </div>
 
-      <ChainRow label="To" chainName={toChain} />
+      <ChainRow label="To" chainName={to.name} iconUrl={to.iconUrl} />
     </div>
   );
 }
