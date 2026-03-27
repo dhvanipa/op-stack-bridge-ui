@@ -4,7 +4,7 @@ import { useState, useCallback } from "react";
 import { useAccount, useWalletClient } from "wagmi";
 import { parseUnits } from "viem";
 import { walletActionsL1 } from "viem/op-stack";
-import { publicClientL2 } from "@/lib/clients";
+import { publicClientL1, publicClientL2 } from "@/lib/clients";
 import { l2Chain } from "@/config/chains";
 import { bridgeConfig } from "@/config/bridge.config";
 import type { TokenConfig } from "@/types/bridge";
@@ -69,6 +69,9 @@ export function useBridgeDeposit() {
 
         setTxHash(hash);
 
+        // Wait for L1 receipt before marking success
+        await publicClientL1.waitForTransactionReceipt({ hash });
+
         // Save to transaction history
         addTransaction({
           id: hash,
@@ -86,11 +89,13 @@ export function useBridgeDeposit() {
       } catch (err) {
         console.error("Deposit error:", err);
         const message =
-          err instanceof Error ? err.message : "Deposit failed";
+          err instanceof Error ? err.message : "";
         if (message.includes("User rejected") || message.includes("denied")) {
-          setError("Transaction rejected");
+          setError("Transaction rejected by user");
+        } else if (message.includes("insufficient funds")) {
+          setError("Insufficient funds for gas");
         } else {
-          setError(message);
+          setError("Deposit failed. Please try again.");
         }
       } finally {
         setIsLoading(false);

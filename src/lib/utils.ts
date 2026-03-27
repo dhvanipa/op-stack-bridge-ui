@@ -31,14 +31,14 @@ export function formatTimeAgo(timestamp: number): string {
 
 export function serializeBigInt(obj: unknown): string {
   return JSON.stringify(obj, (_, value) =>
-    typeof value === "bigint" ? value.toString() + "n" : value
+    typeof value === "bigint" ? `__bigint__${value.toString()}` : value
   );
 }
 
 export function deserializeBigInt(str: string): unknown {
   return JSON.parse(str, (_, value) =>
-    typeof value === "string" && /^\d+n$/.test(value)
-      ? BigInt(value.slice(0, -1))
+    typeof value === "string" && value.startsWith("__bigint__")
+      ? BigInt(value.slice(10))
       : value
   );
 }

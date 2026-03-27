@@ -2,7 +2,7 @@
 
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { ERC20ABI } from "@/lib/abis";
-import { maxUint256 } from "viem";
+import { bridgeConfig } from "@/config/bridge.config";
 import type { TokenConfig } from "@/types/bridge";
 
 export function useTokenAllowance(
@@ -12,18 +12,19 @@ export function useTokenAllowance(
   chainId: number,
   amount: bigint
 ) {
-  const isNative = token.l1Address === "native" && token.l2Address === "native";
-  const tokenAddress = chainId === 1 ? token.l1Address : token.l2Address;
+  const tokenAddress =
+    chainId === bridgeConfig.l1.chainId ? token.l1Address : token.l2Address;
+  const isNative = tokenAddress === "native";
+  const erc20Address = isNative ? undefined : (tokenAddress as `0x${string}`);
 
   const { data: allowance, refetch } = useReadContract({
-    address:
-      tokenAddress !== "native" ? (tokenAddress as `0x${string}`) : undefined,
+    address: erc20Address,
     abi: ERC20ABI,
     functionName: "allowance",
     args: owner ? [owner, spender] : undefined,
     chainId,
     query: {
-      enabled: !!owner && !isNative && tokenAddress !== "native",
+      enabled: !!owner && !isNative,
     },
   });
 
@@ -36,17 +37,16 @@ export function useTokenAllowance(
 
   const needsApproval =
     !isNative &&
-    tokenAddress !== "native" &&
     allowance !== undefined &&
     (allowance as bigint) < amount;
 
   const approve = () => {
-    if (tokenAddress === "native") return;
+    if (!erc20Address) return;
     writeContract({
-      address: tokenAddress as `0x${string}`,
+      address: erc20Address,
       abi: ERC20ABI,
       functionName: "approve",
-      args: [spender, maxUint256],
+      args: [spender, amount],
       chainId,
     });
   };

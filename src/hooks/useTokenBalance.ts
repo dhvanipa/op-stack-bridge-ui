@@ -2,6 +2,7 @@
 
 import { useBalance, useReadContract } from "wagmi";
 import { ERC20ABI } from "@/lib/abis";
+import { bridgeConfig } from "@/config/bridge.config";
 import type { TokenConfig } from "@/types/bridge";
 
 export function useTokenBalance(
@@ -9,9 +10,10 @@ export function useTokenBalance(
   token: TokenConfig,
   chainId: number
 ) {
-  const isNative = token.l1Address === "native" || token.l2Address === "native";
   const tokenAddress =
-    token.l1Address !== "native" ? token.l1Address : token.l2Address;
+    chainId === bridgeConfig.l1.chainId ? token.l1Address : token.l2Address;
+  const isNative = tokenAddress === "native";
+  const erc20Address = isNative ? undefined : (tokenAddress as `0x${string}`);
 
   const nativeBalance = useBalance({
     address,
@@ -20,13 +22,12 @@ export function useTokenBalance(
   });
 
   const erc20Balance = useReadContract({
-    address:
-      tokenAddress !== "native" ? (tokenAddress as `0x${string}`) : undefined,
+    address: erc20Address,
     abi: ERC20ABI,
     functionName: "balanceOf",
     args: address ? [address] : undefined,
     chainId,
-    query: { enabled: !!address && !isNative && tokenAddress !== "native" },
+    query: { enabled: !!address && !isNative },
   });
 
   if (isNative) {

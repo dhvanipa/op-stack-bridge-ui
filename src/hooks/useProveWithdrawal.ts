@@ -6,7 +6,7 @@ import { walletActionsL1 } from "viem/op-stack";
 import { publicClientL1, publicClientL2 } from "@/lib/clients";
 import { l2Chain } from "@/config/chains";
 import { deserializeBigInt } from "@/lib/utils";
-import { getWithdrawals } from "viem/op-stack";
+
 import type { TransactionRecord } from "@/types/transaction";
 
 export function useProveWithdrawal() {
@@ -28,10 +28,6 @@ export function useProveWithdrawal() {
         const receipt = deserializeBigInt(tx.receiptData) as Parameters<
           typeof publicClientL1.getWithdrawalStatus
         >[0]["receipt"];
-
-        // Get the withdrawal messages from the receipt
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const [withdrawal] = getWithdrawals(receipt as any);
 
         // Build prove args — waitToProve resolves quickly if status is ready-to-prove
         const { output, withdrawal: withdrawalForProof } =
@@ -56,12 +52,15 @@ export function useProveWithdrawal() {
         setTxHash(hash);
         return hash;
       } catch (err) {
+        console.error("Prove error:", err);
         const message =
-          err instanceof Error ? err.message : "Prove failed";
+          err instanceof Error ? err.message : "";
         if (message.includes("User rejected") || message.includes("denied")) {
-          setError("Transaction rejected");
+          setError("Transaction rejected by user");
+        } else if (message.includes("insufficient funds")) {
+          setError("Insufficient funds for gas");
         } else {
-          setError(message);
+          setError("Prove withdrawal failed. Please try again.");
         }
       } finally {
         setIsLoading(false);

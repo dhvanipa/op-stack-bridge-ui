@@ -31,9 +31,6 @@ export function BridgeCard() {
       ? bridgeConfig.l1.chainId
       : bridgeConfig.l2.chainId;
 
-  const tokenAddressForBalance =
-    direction === "deposit" ? selectedToken.l1Address : selectedToken.l2Address;
-
   const { balance, isLoading: isLoadingBalance } = useTokenBalance(
     address,
     selectedToken,

@@ -85,12 +85,15 @@ export function useBridgeWithdraw() {
 
         setIsSuccess(true);
       } catch (err) {
+        console.error("Withdrawal error:", err);
         const message =
-          err instanceof Error ? err.message : "Withdrawal failed";
+          err instanceof Error ? err.message : "";
         if (message.includes("User rejected") || message.includes("denied")) {
-          setError("Transaction rejected");
+          setError("Transaction rejected by user");
+        } else if (message.includes("insufficient funds")) {
+          setError("Insufficient funds for gas");
         } else {
-          setError(message);
+          setError("Withdrawal failed. Please try again.");
         }
       } finally {
         setIsLoading(false);

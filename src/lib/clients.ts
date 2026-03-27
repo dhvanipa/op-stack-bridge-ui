@@ -1,6 +1,5 @@
 import { createPublicClient, http } from "viem";
-import { publicActionsL1 } from "viem/op-stack";
-import { publicActionsL2 } from "viem/op-stack";
+import { publicActionsL1, publicActionsL2 } from "viem/op-stack";
 import { l1Chain, l2Chain } from "@/config/chains";
 import { bridgeConfig } from "@/config/bridge.config";
 

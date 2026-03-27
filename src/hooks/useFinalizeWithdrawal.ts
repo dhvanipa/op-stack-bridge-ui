@@ -40,12 +40,15 @@ export function useFinalizeWithdrawal() {
         setTxHash(hash);
         return hash;
       } catch (err) {
+        console.error("Finalize error:", err);
         const message =
-          err instanceof Error ? err.message : "Finalize failed";
+          err instanceof Error ? err.message : "";
         if (message.includes("User rejected") || message.includes("denied")) {
-          setError("Transaction rejected");
+          setError("Transaction rejected by user");
+        } else if (message.includes("insufficient funds")) {
+          setError("Insufficient funds for gas");
         } else {
-          setError(message);
+          setError("Finalize withdrawal failed. Please try again.");
         }
       } finally {
         setIsLoading(false);
