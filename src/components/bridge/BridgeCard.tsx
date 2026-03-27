@@ -110,9 +110,9 @@ export function BridgeCard() {
     setIsReviewOpen(false);
     if (isSuccess) {
       setAmount("");
-      resetDeposit();
-      resetWithdraw();
     }
+    resetDeposit();
+    resetWithdraw();
   };
 
   return (
