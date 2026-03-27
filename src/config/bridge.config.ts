@@ -47,8 +47,8 @@ export interface BridgeConfig {
 
 export const bridgeConfig: BridgeConfig = {
   // ── Branding ──────────────────────────────────────────────────────────
-  appName: "OP Bridge",
-  logoUrl: "/logo.svg",
+  appName: "DUST Bridge",
+  logoUrl: "/dust.png",
   theme: {
     primaryColor: "#6366f1",
     gradientFrom: "#0f0c29",
@@ -66,19 +66,19 @@ export const bridgeConfig: BridgeConfig = {
 
   // ── L2 (Your OP Stack Rollup) ─────────────────────────────────────────
   l2: {
-    chainId: 10, // Replace with your L2 chain ID
-    name: "My L2", // Replace with your L2 name
-    rpcUrl: "https://mainnet.optimism.io", // Replace with your L2 RPC
-    blockExplorer: "https://optimistic.etherscan.io", // Replace with your explorer
+    chainId: 55378, // Replace with your L2 chain ID
+    name: "DUST Mainnet", // Replace with your L2 name
+    rpcUrl: "https://rpc.dustproject.org", // Replace with your L2 RPC
+    blockExplorer: "https://explorer.dustproject.org", // Replace with your explorer
     nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
   },
 
   // ── L1 Contract Addresses (from your op-deployer output) ──────────────
   contracts: {
-    OptimismPortalProxy: "0x0000000000000000000000000000000000000000",
-    L1StandardBridgeProxy: "0x0000000000000000000000000000000000000000",
-    L1CrossDomainMessengerProxy: "0x0000000000000000000000000000000000000000",
-    DisputeGameFactoryProxy: "0x0000000000000000000000000000000000000000",
+    OptimismPortalProxy: "0xf573a6da7a5b5de9fbadfc26cffc595ad04dc7d4",
+    L1StandardBridgeProxy: "0x74dc019e8ea61aca7e9136ac6d97047201776517",
+    L1CrossDomainMessengerProxy: "0x554af8ef8faa88d2de11f07593a9d7577cf20d03",
+    DisputeGameFactoryProxy: "0xfcd88154a329557499535e7c803f3b3bd7fa1115",
   },
 
   // ── Supported Tokens ──────────────────────────────────────────────────
