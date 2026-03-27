@@ -1,5 +1,5 @@
 // Block explorer API types and fetch utility
-// Works with Etherscan and Blockscout-compatible APIs
+// Works with Blockscout-compatible APIs
 
 export interface BlockExplorerTransaction {
   hash: string;
