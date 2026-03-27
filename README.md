@@ -28,7 +28,7 @@ Built as an alternative to paid bridge-as-a-service solutions.
 ```bash
 git clone <your-repo-url>
 cd op-bridge-ui
-npm install
+pnpm install
 ```
 
 ### 1. Configure your chain
@@ -52,23 +52,25 @@ Create a `.env.local` file:
 NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
 ```
 
-Get a free project ID at [cloud.walletconnect.com](https://cloud.walletconnect.com/).
+Get a free project ID at [dashboard.walletconnect.com](https://dashboard.walletconnect.com/).
 
 ### 3. Run
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 ## Bridge Flows
 
 ### Deposit (L1 → L2)
+
 1. Connect wallet on L1
 2. Select token and enter amount
 3. Review and confirm transaction
 4. Funds arrive on L2 in ~3-10 minutes
 
 ### Withdrawal (L2 → L1)
+
 1. Connect wallet on L2
 2. Select token and enter amount
 3. Confirm withdrawal initiation
@@ -86,7 +88,7 @@ npm run dev
 ## Deployment
 
 ```bash
-npm run build
+pnpm build
 ```
 
 Deploy the `.next` output to Vercel, Cloudflare Pages, or any Node.js host.
