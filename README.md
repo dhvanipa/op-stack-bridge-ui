@@ -11,6 +11,7 @@ Built as an alternative to paid bridge-as-a-service solutions.
 - **Single config file** — edit `src/config/bridge.config.ts` and deploy
 - **Full withdrawal lifecycle** — initiate, prove (after ~1hr), finalize (after 7-day challenge period)
 - **Transaction persistence** — localStorage tracks pending withdrawals so users can return to prove/finalize
+- **Block explorer recovery** — recovers transaction history from Etherscan/Blockscout APIs if localStorage is cleared, including receipt reconstruction for in-flight withdrawals
 - **ERC-20 support** — bridge any token pair with automatic approval flow
 - **Wallet connection** — RainbowKit with MetaMask, Coinbase Wallet, WalletConnect, and more
 - **Dark theme** — Superbridge-inspired card-based design with gradient background
@@ -37,7 +38,7 @@ pnpm install
 
 Edit `src/config/bridge.config.ts` with your chain's details:
 
-- L1/L2 chain info (chainId, RPC URL, block explorer)
+- L1/L2 chain info (chainId, RPC URL, block explorer, optional explorer API URL)
 - Contract addresses from your op-deployer output:
   - `OptimismPortalProxy`
   - `L1StandardBridgeProxy`
@@ -80,6 +81,25 @@ pnpm dev
 5. Return and click **Prove** (L1 transaction)
 6. **Wait ~7 days** for the challenge period
 7. Return and click **Finalize** (L1 transaction)
+
+## Transaction Recovery
+
+If a user clears their browser data, in-flight withdrawals can be recovered automatically. Set the optional `explorerApiUrl` fields in your bridge config to enable this:
+
+```ts
+l1: {
+  // ...
+  explorerApiUrl: "https://api.etherscan.io/api",
+},
+l2: {
+  // ...
+  explorerApiUrl: "https://explorer.yourchain.com/api",
+},
+```
+
+The app will query the block explorer APIs to discover past deposits and withdrawals, reconstruct missing transaction receipts from the L2 RPC, and merge them with any localStorage data. This allows users to prove and finalize withdrawals even from a new browser or device.
+
+Works with any Etherscan or Blockscout-compatible explorer API. If not configured, the app works as before (localStorage only).
 
 ## Compatibility
 

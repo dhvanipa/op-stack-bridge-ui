@@ -9,9 +9,9 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { TransactionItem } from "./TransactionItem";
-import { useTransactionHistory } from "@/hooks/useTransactionHistory";
+import { useMergedTransactions } from "@/hooks/useMergedTransactions";
 import { useAccount } from "wagmi";
-import { Inbox } from "lucide-react";
+import { Inbox, Loader2 } from "lucide-react";
 
 interface ActivityPanelProps {
   open: boolean;
@@ -29,7 +29,7 @@ function EmptyState() {
 
 export function ActivityPanel({ open, onClose }: ActivityPanelProps) {
   const { address } = useAccount();
-  const { transactions } = useTransactionHistory(address);
+  const { transactions, isLoadingExplorer } = useMergedTransactions(address);
 
   const deposits = transactions.filter((tx) => tx.direction === "deposit");
   const withdrawals = transactions.filter(
@@ -40,7 +40,12 @@ export function ActivityPanel({ open, onClose }: ActivityPanelProps) {
     <Sheet open={open} onOpenChange={(o) => !o && onClose()}>
       <SheetContent className="bg-card border-white/10 text-white w-full sm:max-w-[400px] p-0">
         <SheetHeader className="px-4 pt-4 pb-2">
-          <SheetTitle className="text-white">Activity</SheetTitle>
+          <SheetTitle className="text-white flex items-center gap-2">
+            Activity
+            {isLoadingExplorer && (
+              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            )}
+          </SheetTitle>
         </SheetHeader>
 
         <Tabs defaultValue="all" className="flex-1">

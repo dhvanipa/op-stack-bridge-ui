@@ -9,6 +9,22 @@ import { deserializeBigInt } from "@/lib/utils";
 
 import type { TransactionRecord } from "@/types/transaction";
 
+type WithdrawalReceipt = Parameters<
+  typeof publicClientL1.getWithdrawalStatus
+>[0]["receipt"];
+
+async function resolveReceipt(tx: TransactionRecord): Promise<WithdrawalReceipt | null> {
+  if (tx.receiptData) {
+    return deserializeBigInt(tx.receiptData) as WithdrawalReceipt;
+  }
+  if (tx.l2TxHash) {
+    return (await publicClientL2.getTransactionReceipt({
+      hash: tx.l2TxHash,
+    })) as unknown as WithdrawalReceipt;
+  }
+  return null;
+}
+
 export function useProveWithdrawal() {
   const { data: walletClient } = useWalletClient();
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +33,7 @@ export function useProveWithdrawal() {
 
   const prove = useCallback(
     async (tx: TransactionRecord) => {
-      if (!walletClient || !tx.receiptData) return;
+      if (!walletClient) return;
 
       setIsLoading(true);
       setError(undefined);
@@ -25,9 +41,8 @@ export function useProveWithdrawal() {
 
       try {
         const l1Wallet = walletClient.extend(walletActionsL1());
-        const receipt = deserializeBigInt(tx.receiptData) as Parameters<
-          typeof publicClientL1.getWithdrawalStatus
-        >[0]["receipt"];
+        const receipt = await resolveReceipt(tx);
+        if (!receipt) return;
 
         // Build prove args — waitToProve resolves quickly if status is ready-to-prove
         const { output, withdrawal: withdrawalForProof } =

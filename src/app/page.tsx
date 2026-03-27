@@ -5,13 +5,13 @@ import { GradientBackground } from "@/components/shared/GradientBackground";
 import { Header } from "@/components/layout/Header";
 import { BridgeCard } from "@/components/bridge/BridgeCard";
 import { ActivityPanel } from "@/components/activity/ActivityPanel";
-import { useTransactionHistory } from "@/hooks/useTransactionHistory";
+import { useMergedTransactions } from "@/hooks/useMergedTransactions";
 import { useAccount } from "wagmi";
 
 export default function Home() {
   const [activityOpen, setActivityOpen] = useState(false);
   const { address } = useAccount();
-  const { hasActionable } = useTransactionHistory(address);
+  const { hasActionable } = useMergedTransactions(address);
 
   return (
     <>

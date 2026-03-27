@@ -3,11 +3,27 @@
 import { useState, useCallback } from "react";
 import { useWalletClient } from "wagmi";
 import { walletActionsL1 } from "viem/op-stack";
-import { publicClientL1 } from "@/lib/clients";
+import { publicClientL1, publicClientL2 } from "@/lib/clients";
 import { l2Chain } from "@/config/chains";
 import { deserializeBigInt } from "@/lib/utils";
 import { getWithdrawals } from "viem/op-stack";
 import type { TransactionRecord } from "@/types/transaction";
+
+type WithdrawalReceipt = Parameters<
+  typeof publicClientL1.getWithdrawalStatus
+>[0]["receipt"];
+
+async function resolveReceipt(tx: TransactionRecord): Promise<WithdrawalReceipt | null> {
+  if (tx.receiptData) {
+    return deserializeBigInt(tx.receiptData) as WithdrawalReceipt;
+  }
+  if (tx.l2TxHash) {
+    return (await publicClientL2.getTransactionReceipt({
+      hash: tx.l2TxHash,
+    })) as unknown as WithdrawalReceipt;
+  }
+  return null;
+}
 
 export function useFinalizeWithdrawal() {
   const { data: walletClient } = useWalletClient();
@@ -17,7 +33,7 @@ export function useFinalizeWithdrawal() {
 
   const finalize = useCallback(
     async (tx: TransactionRecord) => {
-      if (!walletClient || !tx.receiptData) return;
+      if (!walletClient) return;
 
       setIsLoading(true);
       setError(undefined);
@@ -25,9 +41,8 @@ export function useFinalizeWithdrawal() {
 
       try {
         const l1Wallet = walletClient.extend(walletActionsL1());
-        const receipt = deserializeBigInt(tx.receiptData) as Parameters<
-          typeof publicClientL1.getWithdrawalStatus
-        >[0]["receipt"];
+        const receipt = await resolveReceipt(tx);
+        if (!receipt) return;
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const [withdrawal] = getWithdrawals(receipt as any);

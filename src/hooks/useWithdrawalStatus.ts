@@ -1,24 +1,36 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { publicClientL1 } from "@/lib/clients";
+import { publicClientL1, publicClientL2 } from "@/lib/clients";
 import { l2Chain } from "@/config/chains";
 import { deserializeBigInt } from "@/lib/utils";
 import type { TransactionRecord, WithdrawalStatus } from "@/types/transaction";
 
+type WithdrawalReceipt = Parameters<
+  typeof publicClientL1.getWithdrawalStatus
+>[0]["receipt"];
+
 export function useWithdrawalStatus(tx: TransactionRecord | undefined) {
   const isWithdrawal = tx?.direction === "withdrawal";
   const isFinalized = tx?.status === "finalized";
-  const hasReceipt = !!tx?.receiptData;
+  const canResolveReceipt = !!tx?.receiptData || !!tx?.l2TxHash;
 
   return useQuery<WithdrawalStatus | null>({
     queryKey: ["withdrawalStatus", tx?.id],
     queryFn: async () => {
-      if (!tx?.receiptData) return null;
+      if (!tx) return null;
 
-      const receipt = deserializeBigInt(tx.receiptData) as Parameters<
-        typeof publicClientL1.getWithdrawalStatus
-      >[0]["receipt"];
+      let receipt: WithdrawalReceipt | null = null;
+
+      if (tx.receiptData) {
+        receipt = deserializeBigInt(tx.receiptData) as WithdrawalReceipt;
+      } else if (tx.l2TxHash) {
+        receipt = (await publicClientL2.getTransactionReceipt({
+          hash: tx.l2TxHash,
+        })) as unknown as WithdrawalReceipt;
+      }
+
+      if (!receipt) return null;
 
       try {
         const status = await publicClientL1.getWithdrawalStatus({
@@ -32,6 +44,6 @@ export function useWithdrawalStatus(tx: TransactionRecord | undefined) {
       }
     },
     refetchInterval: 60_000,
-    enabled: isWithdrawal && !isFinalized && hasReceipt,
+    enabled: isWithdrawal && !isFinalized && canResolveReceipt,
   });
 }

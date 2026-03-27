@@ -22,6 +22,7 @@ export interface BridgeConfig {
     name: string;
     rpcUrl: string;
     blockExplorer: string;
+    explorerApiUrl?: string;
     nativeCurrency: { name: string; symbol: string; decimals: number };
     iconUrl?: string;
   };
@@ -30,6 +31,7 @@ export interface BridgeConfig {
     name: string;
     rpcUrl: string;
     blockExplorer: string;
+    explorerApiUrl?: string;
     nativeCurrency: { name: string; symbol: string; decimals: number };
     iconUrl?: string;
   };

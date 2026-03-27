@@ -22,6 +22,7 @@ export const bridgeConfig: BridgeConfig = {
     name: "Ethereum",
     rpcUrl: "https://ethereum-rpc.publicnode.com",
     blockExplorer: "https://etherscan.io",
+    explorerApiUrl: "https://api.etherscan.io/api", // Etherscan-compatible API
     nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
     iconUrl: "/ethereum.svg",
   },
@@ -32,6 +33,7 @@ export const bridgeConfig: BridgeConfig = {
     name: "DUST Mainnet", // Replace with your L2 name
     rpcUrl: "https://rpc.dustproject.org", // Replace with your L2 RPC
     blockExplorer: "https://explorer.dustproject.org", // Replace with your explorer
+    explorerApiUrl: "https://explorer.dustproject.org/api", // Blockscout-compatible API
     nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
     iconUrl: "/dust.png", // Replace with your L2 chain icon
   },
