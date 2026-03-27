@@ -8,5 +8,5 @@ export const L2_TO_L1_MESSAGE_PASSER =
 
 // Time constants
 export const DEPOSIT_CONFIRMATION_MINUTES = 3;
-export const PROVE_WAIT_HOURS = 1;
+export const PROVE_WAIT_HOURS = 12;
 export const FINALIZE_WAIT_DAYS = 7;

@@ -77,7 +77,7 @@ pnpm dev
 1. Connect wallet on L2
 2. Select token and enter amount
 3. Confirm withdrawal initiation
-4. **Wait ~1 hour** for the output root to be published
+4. **Wait ~12 hours** for the output root to be published
 5. Return and click **Prove** (L1 transaction)
 6. **Wait ~7 days** for the challenge period
 7. Return and click **Finalize** (L1 transaction)

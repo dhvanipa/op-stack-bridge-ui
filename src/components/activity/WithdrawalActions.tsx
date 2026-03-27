@@ -63,7 +63,7 @@ export function WithdrawalActions({ tx }: WithdrawalActionsProps) {
   if (tx.status === "waiting-to-prove") {
     return (
       <span className="text-xs text-muted-foreground">
-        Waiting for output root (~1 hour)
+        Waiting for output root (~12 hours)
       </span>
     );
   }
