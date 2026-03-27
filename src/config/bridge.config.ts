@@ -21,8 +21,8 @@ export const bridgeConfig: BridgeConfig = {
     chainId: 1,
     name: "Ethereum",
     rpcUrl: "https://ethereum-rpc.publicnode.com",
-    blockExplorer: "https://etherscan.io",
-    explorerApiUrl: "https://api.etherscan.io/api", // Etherscan-compatible API
+    blockExplorer: "https://eth.blockscout.com",
+    explorerApiUrl: "https://eth.blockscout.com/api", // Blockscout API
     nativeCurrency: { name: "Ether", symbol: "ETH", decimals: 18 },
     iconUrl: "/ethereum.svg",
   },

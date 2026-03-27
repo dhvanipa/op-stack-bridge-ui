@@ -89,7 +89,7 @@ If a user clears their browser data, in-flight withdrawals can be recovered auto
 ```ts
 l1: {
   // ...
-  explorerApiUrl: "https://api.etherscan.io/api",
+  explorerApiUrl: "https://eth.blockscout.com/api",
 },
 l2: {
   // ...
@@ -97,9 +97,9 @@ l2: {
 },
 ```
 
-The app will query the block explorer APIs to discover past deposits and withdrawals, reconstruct missing transaction receipts from the L2 RPC, and merge them with any localStorage data. This allows users to prove and finalize withdrawals even from a new browser or device.
+The app will query the Blockscout APIs to discover past deposits and withdrawals, reconstruct missing transaction receipts from the L2 RPC, and merge them with any localStorage data. This allows users to prove and finalize withdrawals even from a new browser or device.
 
-Works with any Etherscan or Blockscout-compatible explorer API. If not configured, the app works as before (localStorage only).
+Works with any Blockscout-compatible explorer API. If not configured, the app works as before (localStorage only).
 
 ## Compatibility
 
