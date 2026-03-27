@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { Web3Provider } from "@/providers/Web3Provider";
+import { ClientProviders } from "@/providers/ClientProviders";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -25,10 +25,10 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} dark h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <Web3Provider>
+        <ClientProviders>
           {children}
           <Toaster theme="dark" position="bottom-right" />
-        </Web3Provider>
+        </ClientProviders>
       </body>
     </html>
   );
