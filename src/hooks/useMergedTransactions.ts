@@ -62,6 +62,8 @@ export function useMergedTransactions(address?: string) {
   const addTransactionStore = useTransactionStore((s) => s.addTransaction);
 
   useEffect(() => {
+    let cancelled = false;
+
     const withdrawalsNeedingReceipts = transactions.filter(
       (tx) =>
         tx.direction === "withdrawal" &&
@@ -82,6 +84,8 @@ export function useMergedTransactions(address?: string) {
 
       reconstructReceiptData(tx.l2TxHash!)
         .then((receiptData) => {
+          if (cancelled) return;
+
           // Persist to Zustand store so it survives and doesn't need re-fetching
           const existsInStore = useTransactionStore
             .getState()
@@ -104,6 +108,10 @@ export function useMergedTransactions(address?: string) {
           hydratingRef.current.delete(tx.id);
         });
     }
+
+    return () => {
+      cancelled = true;
+    };
   }, [transactions, updateTransactionStore, addTransactionStore]);
 
   const hasActionable = transactions.some(

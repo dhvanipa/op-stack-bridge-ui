@@ -14,14 +14,27 @@ export async function GET(request: NextRequest) {
     return Response.json({ error: "Missing url parameter" }, { status: 400 });
   }
 
-  // Validate the URL starts with one of our configured explorer APIs
-  const isAllowed = ALLOWED_URLS.some((allowed) => url.startsWith(allowed));
+  // Validate the URL origin matches one of our configured explorer APIs
+  let parsedUrl: URL;
+  try {
+    parsedUrl = new URL(url);
+  } catch {
+    return Response.json({ error: "Invalid URL" }, { status: 400 });
+  }
+
+  const isAllowed = ALLOWED_URLS.some((allowed) => {
+    const allowedUrl = new URL(allowed);
+    return parsedUrl.origin === allowedUrl.origin && parsedUrl.pathname.startsWith(allowedUrl.pathname);
+  });
   if (!isAllowed) {
     return Response.json({ error: "URL not allowed" }, { status: 403 });
   }
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(parsedUrl.toString());
+    if (!response.ok) {
+      return Response.json({ error: `Explorer returned ${response.status}` }, { status: response.status });
+    }
     const data = await response.json();
     return Response.json(data);
   } catch {

@@ -9,7 +9,7 @@ import { L2StandardBridgeABI } from "@/lib/abis";
 import { L2_STANDARD_BRIDGE } from "@/lib/constants";
 import { useTransactionHistory } from "./useTransactionHistory";
 import { publicClientL2 } from "@/lib/clients";
-import { serializeBigInt } from "@/lib/utils";
+import { serializeBigInt, classifyTransactionError } from "@/lib/utils";
 
 export function useBridgeWithdraw() {
   const { address } = useAccount();
@@ -86,15 +86,7 @@ export function useBridgeWithdraw() {
         setIsSuccess(true);
       } catch (err) {
         console.error("Withdrawal error:", err);
-        const message =
-          err instanceof Error ? err.message : "";
-        if (message.includes("User rejected") || message.includes("denied")) {
-          setError("Transaction rejected by user");
-        } else if (message.includes("insufficient funds")) {
-          setError("Insufficient funds for gas");
-        } else {
-          setError("Withdrawal failed. Please try again.");
-        }
+        setError(classifyTransactionError(err, "Withdrawal failed. Please try again."));
       } finally {
         setIsLoading(false);
       }

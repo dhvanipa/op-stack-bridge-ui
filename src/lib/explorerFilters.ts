@@ -7,8 +7,9 @@ import { L1StandardBridgeABI, L2StandardBridgeABI } from "@/lib/abis";
 import { L2_TO_L1_MESSAGE_PASSER, L2_STANDARD_BRIDGE } from "@/lib/constants";
 import type { BlockExplorerTransaction } from "@/lib/explorer";
 
-const DEPOSIT_FUNCTIONS = ["bridgeETH", "bridgeETHTo", "bridgeERC20To"];
-const WITHDRAWAL_FUNCTIONS = ["bridgeETH", "bridgeETHTo", "bridgeERC20To"];
+// Both L1StandardBridge and L2StandardBridge share the same function names;
+// direction is determined by which contract address the tx targets.
+const BRIDGE_FUNCTIONS = ["bridgeETH", "bridgeETHTo", "bridgeERC20To"];
 
 export function isDeposit(tx: BlockExplorerTransaction): boolean {
   const to = tx.to.toLowerCase();
@@ -28,7 +29,7 @@ export function isDeposit(tx: BlockExplorerTransaction): boolean {
         abi: L1StandardBridgeABI,
         data: tx.input as `0x${string}`,
       });
-      return DEPOSIT_FUNCTIONS.includes(functionName);
+      return BRIDGE_FUNCTIONS.includes(functionName);
     } catch {
       return false;
     }
@@ -52,7 +53,7 @@ export function isWithdrawal(tx: BlockExplorerTransaction): boolean {
         abi: L2StandardBridgeABI,
         data: tx.input as `0x${string}`,
       });
-      return WITHDRAWAL_FUNCTIONS.includes(functionName);
+      return BRIDGE_FUNCTIONS.includes(functionName);
     } catch {
       return false;
     }

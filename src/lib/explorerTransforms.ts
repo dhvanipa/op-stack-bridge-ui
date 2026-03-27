@@ -65,7 +65,7 @@ export function explorerTxToDeposit(
     tokenSymbol,
     tokenDecimals,
     from: tx.from as `0x${string}`,
-    to: tx.from as `0x${string}`,
+    to: tx.to as `0x${string}`,
     timestamp: parseInt(tx.timeStamp) * 1000,
   };
 }
@@ -88,7 +88,7 @@ export function explorerTxToWithdrawal(
     tokenSymbol,
     tokenDecimals,
     from: tx.from as `0x${string}`,
-    to: tx.from as `0x${string}`,
+    to: tx.to as `0x${string}`,
     timestamp: parseInt(tx.timeStamp) * 1000,
   };
 }

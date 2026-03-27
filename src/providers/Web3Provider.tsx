@@ -8,15 +8,23 @@ import { bridgeConfig } from "@/config/bridge.config";
 import { useState, type ReactNode } from "react";
 import "@rainbow-me/rainbowkit/styles.css";
 
+const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
+if (!projectId) {
+  throw new Error(
+    "Missing NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID environment variable. " +
+    "Get one at https://cloud.walletconnect.com/"
+  );
+}
+
 const config = getDefaultConfig({
   appName: bridgeConfig.appName,
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+  projectId,
   chains: [l1Chain, l2Chain],
   transports: {
     [l1Chain.id]: http(bridgeConfig.l1.rpcUrl),
     [l2Chain.id]: http(bridgeConfig.l2.rpcUrl),
   },
-  ssr: true,
+  ssr: false,
 });
 
 export function Web3Provider({ children }: { children: ReactNode }) {

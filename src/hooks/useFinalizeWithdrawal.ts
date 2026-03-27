@@ -5,7 +5,7 @@ import { useWalletClient } from "wagmi";
 import { walletActionsL1 } from "viem/op-stack";
 import { publicClientL1, publicClientL2 } from "@/lib/clients";
 import { l2Chain } from "@/config/chains";
-import { deserializeBigInt } from "@/lib/utils";
+import { deserializeBigInt, classifyTransactionError } from "@/lib/utils";
 import { getWithdrawals } from "viem/op-stack";
 import type { TransactionRecord } from "@/types/transaction";
 
@@ -44,27 +44,19 @@ export function useFinalizeWithdrawal() {
         const receipt = await resolveReceipt(tx);
         if (!receipt) return;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const [withdrawal] = getWithdrawals(receipt as any);
+        const [withdrawal] = getWithdrawals(receipt as Parameters<typeof getWithdrawals>[0]);
 
         const hash = await l1Wallet.finalizeWithdrawal({
           withdrawal,
-          targetChain: l2Chain,
-        } as Parameters<typeof l1Wallet.finalizeWithdrawal>[0]);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          targetChain: l2Chain as any,
+        });
 
         setTxHash(hash);
         return hash;
       } catch (err) {
         console.error("Finalize error:", err);
-        const message =
-          err instanceof Error ? err.message : "";
-        if (message.includes("User rejected") || message.includes("denied")) {
-          setError("Transaction rejected by user");
-        } else if (message.includes("insufficient funds")) {
-          setError("Insufficient funds for gas");
-        } else {
-          setError("Finalize withdrawal failed. Please try again.");
-        }
+        setError(classifyTransactionError(err, "Finalize withdrawal failed. Please try again."));
       } finally {
         setIsLoading(false);
       }

@@ -42,3 +42,38 @@ export function deserializeBigInt(str: string): unknown {
       : value
   );
 }
+
+const USER_REJECTED_PATTERNS = [
+  "user rejected",
+  "user denied",
+  "rejected the request",
+  "denied transaction",
+  "user cancelled",
+  "user canceled",
+  "action_rejected",
+];
+
+const INSUFFICIENT_FUNDS_PATTERNS = [
+  "insufficient funds",
+  "exceeds balance",
+  "not enough balance",
+  "insufficient balance",
+];
+
+export function classifyTransactionError(
+  err: unknown,
+  fallbackMessage: string
+): string {
+  const message =
+    err instanceof Error ? err.message.toLowerCase() : String(err).toLowerCase();
+
+  if (USER_REJECTED_PATTERNS.some((p) => message.includes(p))) {
+    return "Transaction rejected by user";
+  }
+
+  if (INSUFFICIENT_FUNDS_PATTERNS.some((p) => message.includes(p))) {
+    return "Insufficient funds for gas";
+  }
+
+  return fallbackMessage;
+}

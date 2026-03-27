@@ -35,9 +35,9 @@ export function useWithdrawalStatus(tx: TransactionRecord | undefined) {
       try {
         const status = await publicClientL1.getWithdrawalStatus({
           receipt,
-          targetChain: l2Chain,
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any);
+          targetChain: l2Chain as any,
+        });
         return status as WithdrawalStatus;
       } catch {
         return null;
