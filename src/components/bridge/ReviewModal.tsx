@@ -18,7 +18,7 @@ import {
 } from "@/lib/constants";
 import type { BridgeDirection } from "@/types/transaction";
 import type { TokenConfig } from "@/types/bridge";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface ReviewModalProps {
   open: boolean;
@@ -45,11 +45,16 @@ export function ReviewModal({
   isSuccess,
   error,
 }: ReviewModalProps) {
-  const [checks, setChecks] = useState<boolean[]>(
-    direction === "deposit" ? [false] : [false, false, false]
-  );
+  const getInitialChecks = (dir: BridgeDirection) =>
+    dir === "deposit" ? [false] : [false, false, false];
 
-  const allChecked = checks.every(Boolean);
+  const [checks, setChecks] = useState<boolean[]>(getInitialChecks(direction));
+
+  useEffect(() => {
+    setChecks(getInitialChecks(direction));
+  }, [direction]);
+
+  const allChecked = checks.length > 0 && checks.every(Boolean);
   const fromChain =
     direction === "deposit" ? bridgeConfig.l1.name : bridgeConfig.l2.name;
   const toChain =
