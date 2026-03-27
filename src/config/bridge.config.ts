@@ -4,7 +4,7 @@
 // Fill in your chain details, contract addresses, and supported tokens below.
 // ============================================================================
 
-import type { TokenConfig, BridgeConfig } from "@/types/bridge";
+import type { BridgeConfig } from "@/types/bridge";
 
 export const bridgeConfig: BridgeConfig = {
   // ── Branding ──────────────────────────────────────────────────────────

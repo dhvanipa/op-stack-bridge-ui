@@ -77,19 +77,25 @@ export function BridgeButton({
     );
   }
 
+  let parsedAmount: bigint | null = null;
   try {
-    const parsedAmount = parseUnits(amount, selectedToken.decimals);
-    if (balance !== undefined && parsedAmount > balance) {
-      return (
-        <Button disabled className="w-full h-14 text-lg font-semibold">
-          Insufficient Balance
-        </Button>
-      );
-    }
+    parsedAmount = parseUnits(amount, selectedToken.decimals);
   } catch {
+    // invalid amount string
+  }
+
+  if (parsedAmount === null) {
     return (
       <Button disabled className="w-full h-14 text-lg font-semibold">
         Invalid Amount
+      </Button>
+    );
+  }
+
+  if (balance !== undefined && parsedAmount > balance) {
+    return (
+      <Button disabled className="w-full h-14 text-lg font-semibold">
+        Insufficient Balance
       </Button>
     );
   }

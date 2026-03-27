@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { bridgeConfig } from "@/config/bridge.config";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
@@ -16,7 +17,7 @@ function ChainRow({ label, chainName, iconUrl }: { label: string; chainName: str
       <span className="text-sm text-muted-foreground">{label}</span>
       <div className="flex items-center gap-2">
         {iconUrl ? (
-          <img src={iconUrl} alt={chainName} className="h-6 w-6 rounded-full" />
+          <Image src={iconUrl} alt={chainName} width={24} height={24} className="rounded-full" />
         ) : (
           <div className="h-6 w-6 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold">
             {chainName.charAt(0)}

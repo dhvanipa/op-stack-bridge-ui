@@ -21,10 +21,10 @@ export function useWithdrawalStatus(tx: TransactionRecord | undefined) {
       >[0]["receipt"];
 
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const status = await publicClientL1.getWithdrawalStatus({
           receipt,
           targetChain: l2Chain,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any);
         return status as WithdrawalStatus;
       } catch {

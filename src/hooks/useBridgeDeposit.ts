@@ -43,11 +43,9 @@ export function useBridgeDeposit() {
             to: address,
           });
 
-          // Remove portalAddress from args since we provide targetChain which has the contract
-          const { portalAddress, ...depositArgs } = args;
-
           hash = await l1Wallet.depositTransaction({
-            ...depositArgs,
+            ...args,
+            portalAddress: undefined,
             targetChain: l2Chain,
           } as Parameters<typeof l1Wallet.depositTransaction>[0]);
         } else {
@@ -102,7 +100,7 @@ export function useBridgeDeposit() {
         setIsLoading(false);
       }
     },
-    [walletClient, address, addTransaction]
+    [walletClient, address, addTransaction, updateTransaction]
   );
 
   const reset = useCallback(() => {

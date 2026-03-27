@@ -31,10 +31,10 @@ export function useProveWithdrawal() {
 
         // Build prove args — waitToProve resolves quickly if status is ready-to-prove
         const { output, withdrawal: withdrawalForProof } =
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           await publicClientL1.waitToProve({
             receipt: receipt!,
             targetChain: l2Chain,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any);
 
         // Build the prove withdrawal parameters

@@ -4,7 +4,6 @@ import { useState, useCallback } from "react";
 import { useAccount, useWalletClient } from "wagmi";
 import { parseUnits } from "viem";
 import { walletActionsL2 } from "viem/op-stack";
-import { bridgeConfig } from "@/config/bridge.config";
 import type { TokenConfig } from "@/types/bridge";
 import { L2StandardBridgeABI } from "@/lib/abis";
 import { L2_STANDARD_BRIDGE } from "@/lib/constants";
