@@ -1,6 +1,6 @@
 // Convert raw block explorer transactions into TransactionRecord objects
 
-import { decodeFunctionData } from "viem";
+import { decodeFunctionData, formatUnits } from "viem";
 import { bridgeConfig } from "@/config/bridge.config";
 import { L1StandardBridgeABI, L2StandardBridgeABI } from "@/lib/abis";
 import type { BlockExplorerTransaction } from "@/lib/explorer";
@@ -20,7 +20,7 @@ function decodeAmountAndToken(
 
     if (functionName === "bridgeERC20To" && args) {
       const localToken = (args[0] as string).toLowerCase();
-      const amount = (args[3] as bigint).toString();
+      const rawAmount = args[3] as bigint;
 
       // Match token from config
       const token = bridgeConfig.tokens.find((t) => {
@@ -29,8 +29,10 @@ function decodeAmountAndToken(
         return typeof addr === "string" && addr.toLowerCase() === localToken;
       });
 
+      const decimals = token?.decimals ?? 18;
+
       return {
-        amount,
+        amount: formatUnits(rawAmount, decimals),
         tokenSymbol: token?.symbol ?? "ERC20",
       };
     }
@@ -38,9 +40,9 @@ function decodeAmountAndToken(
     // Not an ERC-20 call, fall through to ETH
   }
 
-  // Native ETH transfer
+  // Native ETH transfer — explorer returns value in wei, convert to human-readable
   return {
-    amount: tx.value,
+    amount: formatUnits(BigInt(tx.value), bridgeConfig.l1.nativeCurrency.decimals),
     tokenSymbol: bridgeConfig.l1.nativeCurrency.symbol,
   };
 }
