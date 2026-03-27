@@ -127,6 +127,9 @@
   html {
     @apply font-sans;
   }
+  button, [role="button"], a, select, [role="tab"], [role="checkbox"], label {
+    cursor: pointer;
+  }
 }
 
 .gradient-bg {
