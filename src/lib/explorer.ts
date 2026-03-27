@@ -35,11 +35,13 @@ export async function fetchExplorerTxList(
     ...extraParams,
   });
 
-  const url = `${explorerApiUrl}?${params.toString()}`;
+  // Build the target explorer URL, then proxy through our API route to avoid CORS
+  const targetUrl = `${explorerApiUrl}?${params.toString()}`;
+  const proxyUrl = `/api/explorer?url=${encodeURIComponent(targetUrl)}`;
 
   let response: Response;
   try {
-    response = await fetch(url);
+    response = await fetch(proxyUrl);
   } catch {
     return [];
   }
@@ -48,7 +50,7 @@ export async function fetchExplorerTxList(
   if (response.status === 429) {
     await new Promise((r) => setTimeout(r, 2000));
     try {
-      response = await fetch(url);
+      response = await fetch(proxyUrl);
     } catch {
       return [];
     }
