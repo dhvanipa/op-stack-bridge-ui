@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { TokenSelector } from "./TokenSelector";
 import { formatBalance } from "@/lib/utils";
 import { formatUnits } from "viem";
+import { useEthPrice } from "@/hooks/useEthPrice";
 import type { TokenConfig } from "@/types/bridge";
 
 interface AmountInputProps {
@@ -24,11 +25,22 @@ export function AmountInput({
   balance,
   isLoadingBalance,
 }: AmountInputProps) {
+  const ethPrice = useEthPrice();
+
   const handleMax = () => {
     if (balance !== undefined) {
       onAmountChange(formatUnits(balance, selectedToken.decimals));
     }
   };
+
+  const usdValue =
+    ethPrice && amount && parseFloat(amount) > 0
+      ? (parseFloat(amount) * ethPrice).toLocaleString(undefined, {
+          style: "currency",
+          currency: "USD",
+          maximumFractionDigits: 2,
+        })
+      : null;
 
   return (
     <div className="rounded-xl bg-white/5 p-4 space-y-2">
@@ -51,6 +63,10 @@ export function AmountInput({
           onSelect={onTokenSelect}
         />
       </div>
+
+      {usdValue && (
+        <p className="text-sm text-muted-foreground">{usdValue}</p>
+      )}
 
       <div className="flex items-center justify-between text-sm">
         <span className="text-muted-foreground">

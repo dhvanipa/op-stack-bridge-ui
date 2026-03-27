@@ -76,7 +76,7 @@ export function useBridgeDeposit() {
         addTransaction({
           id: hash,
           direction: "deposit",
-          status: "pending",
+          status: "completed",
           l1TxHash: hash,
           amount,
           tokenSymbol: token.symbol,
