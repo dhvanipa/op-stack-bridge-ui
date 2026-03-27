@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { TokenSelector } from "./TokenSelector";
 import { formatBalance } from "@/lib/utils";
 import { formatUnits } from "viem";
-import type { TokenConfig } from "@/config/bridge.config";
+import type { TokenConfig } from "@/types/bridge";
 
 interface AmountInputProps {
   amount: string;

@@ -10,8 +10,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "OP Bridge",
-  description: "Bridge assets between Ethereum and your OP Stack L2",
+  title: "DUST Bridge",
+  description: "Bridge assets between Ethereum and DUST",
+  icons: {
+    icon: "/dust.png",
+  },
 };
 
 export default function RootLayout({

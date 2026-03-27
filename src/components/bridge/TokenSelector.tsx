@@ -1,6 +1,7 @@
 "use client";
 
-import { bridgeConfig, type TokenConfig } from "@/config/bridge.config";
+import { bridgeConfig } from "@/config/bridge.config";
+import type { TokenConfig } from "@/types/bridge";
 import {
   Select,
   SelectContent,

@@ -3,7 +3,7 @@
 import { useReadContract, useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { ERC20ABI } from "@/lib/abis";
 import { maxUint256 } from "viem";
-import type { TokenConfig } from "@/config/bridge.config";
+import type { TokenConfig } from "@/types/bridge";
 
 export function useTokenAllowance(
   owner: `0x${string}` | undefined,

@@ -6,7 +6,8 @@ import { parseUnits } from "viem";
 import { walletActionsL1 } from "viem/op-stack";
 import { publicClientL2 } from "@/lib/clients";
 import { l2Chain } from "@/config/chains";
-import { bridgeConfig, type TokenConfig } from "@/config/bridge.config";
+import { bridgeConfig } from "@/config/bridge.config";
+import type { TokenConfig } from "@/types/bridge";
 import { L1StandardBridgeABI } from "@/lib/abis";
 import { useTransactionHistory } from "./useTransactionHistory";
 

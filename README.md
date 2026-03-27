@@ -1,4 +1,4 @@
-# OP Bridge UI
+# OP Stack Bridge UI
 
 An open-source, self-hostable bridge UI for OP Stack rollups. Supports deposits (L1→L2) and the full 3-step withdrawal flow (initiate → prove → finalize).
 

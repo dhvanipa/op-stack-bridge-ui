@@ -17,7 +17,7 @@ import {
   FINALIZE_WAIT_DAYS,
 } from "@/lib/constants";
 import type { BridgeDirection } from "@/types/transaction";
-import type { TokenConfig } from "@/config/bridge.config";
+import type { TokenConfig } from "@/types/bridge";
 import { useState } from "react";
 
 interface ReviewModalProps {

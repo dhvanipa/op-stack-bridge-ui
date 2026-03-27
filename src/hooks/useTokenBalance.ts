@@ -2,7 +2,7 @@
 
 import { useBalance, useReadContract } from "wagmi";
 import { ERC20ABI } from "@/lib/abis";
-import type { TokenConfig } from "@/config/bridge.config";
+import type { TokenConfig } from "@/types/bridge";
 
 export function useTokenBalance(
   address: `0x${string}` | undefined,

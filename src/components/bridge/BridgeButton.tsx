@@ -7,7 +7,7 @@ import { bridgeConfig } from "@/config/bridge.config";
 import type { BridgeDirection } from "@/types/transaction";
 import { Loader2 } from "lucide-react";
 import { parseUnits } from "viem";
-import type { TokenConfig } from "@/config/bridge.config";
+import type { TokenConfig } from "@/types/bridge";
 
 interface BridgeButtonProps {
   direction: BridgeDirection;
@@ -53,9 +53,7 @@ export function BridgeButton({
   }
 
   const requiredChainId =
-    direction === "deposit"
-      ? bridgeConfig.l1.chainId
-      : bridgeConfig.l2.chainId;
+    direction === "deposit" ? bridgeConfig.l1.chainId : bridgeConfig.l2.chainId;
 
   if (chainId !== requiredChainId) {
     const chainName =
