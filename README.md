@@ -4,6 +4,8 @@ An open-source, self-hostable bridge UI for OP Stack rollups. Supports deposits 
 
 Built as an alternative to paid bridge-as-a-service solutions.
 
+![OP Stack Bridge UI](docs/screenshot.png)
+
 ## Features
 
 - **Single config file** — edit `src/config/bridge.config.ts` and deploy
