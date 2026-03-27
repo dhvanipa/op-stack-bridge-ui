@@ -2,6 +2,19 @@
 
 import { useEffect, useState } from "react";
 
+const PRICE_APIS = [
+  {
+    url: "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd",
+    extract: (data: Record<string, unknown>) =>
+      (data as { ethereum?: { usd?: number } }).ethereum?.usd,
+  },
+  {
+    url: "https://min-api.cryptocompare.com/data/price?fsym=ETH&tsyms=USD",
+    extract: (data: Record<string, unknown>) =>
+      (data as { USD?: number }).USD,
+  },
+];
+
 export function useEthPrice() {
   const [price, setPrice] = useState<number | undefined>();
 
@@ -9,16 +22,19 @@ export function useEthPrice() {
     let stale = false;
 
     async function fetchPrice() {
-      try {
-        const res = await fetch(
-          "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd"
-        );
-        const data = await res.json();
-        if (!stale && data.ethereum?.usd) {
-          setPrice(data.ethereum.usd);
+      for (const api of PRICE_APIS) {
+        try {
+          const res = await fetch(api.url);
+          if (!res.ok) continue;
+          const data = await res.json();
+          const value = api.extract(data);
+          if (!stale && value && value > 0) {
+            setPrice(value);
+            return;
+          }
+        } catch {
+          continue;
         }
-      } catch {
-        // silently fail — USD display is non-critical
       }
     }
 
