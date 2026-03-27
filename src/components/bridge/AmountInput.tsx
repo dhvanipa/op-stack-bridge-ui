@@ -44,7 +44,7 @@ export function AmountInput({
               onAmountChange(val);
             }
           }}
-          className="border-0 bg-transparent text-2xl font-semibold text-white placeholder:text-white/30 focus-visible:ring-0 p-0 h-auto"
+          className="border-0 bg-transparent !text-3xl md:!text-3xl font-semibold text-white placeholder:text-white/30 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 p-0 !h-auto"
         />
         <TokenSelector
           selectedToken={selectedToken}
