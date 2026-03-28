@@ -9,12 +9,12 @@ Built as an alternative to paid bridge-as-a-service solutions.
 ## Features
 
 - **Single config file** — edit `src/config/bridge.config.ts` and deploy
-- **Full withdrawal lifecycle** — initiate, prove (after ~1hr), finalize (after 7-day challenge period)
+- **Full withdrawal lifecycle** — initiate, prove (after ~12hr), finalize (after 7-day challenge period)
 - **Transaction persistence** — localStorage tracks pending withdrawals so users can return to prove/finalize
 - **Block explorer recovery** — recovers transaction history from Blockscout APIs if localStorage is cleared, including receipt reconstruction for in-flight withdrawals
 - **ERC-20 support** — bridge any token pair with automatic approval flow
 - **Wallet connection** — RainbowKit with MetaMask, Coinbase Wallet, WalletConnect, and more
-- **Dark theme** — Superbridge-inspired card-based design with gradient background
+- **Dark theme** — Card-based design with gradient background
 - **Mobile responsive**
 
 ## Tech Stack
